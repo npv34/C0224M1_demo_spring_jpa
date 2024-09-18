@@ -45,41 +45,25 @@
     </nav>
     <div class="row d-flex justify-content-center">
         <div class="col-12 col-md-6">
-            <div>
-                <h2>Group list</h2>
-                <div class="row">
-                    <div class="col-12 col-md-4">
-                        <a class="btn btn-success" href="/groups/create">New group</a>
-                    </div>
-                    <div class="col-12 col-md-8">
-                        <form class="d-flex">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success" type="submit">Search</button>
-                        </form>
+            <div class="card">
+                <div class="card-header">
+                    Update group ID:
+                    <strong th:text="${group.id}"></strong>
                 </div>
+                <div class="card-body">
+                    <form th:action="@{/groups/{id}/update(id=${group.id})}" method="post">
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" th:value="${group.name}" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="form-group mt-2">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <a class="btn btn-info" th:href="@{/groups}">Cancel</a>
+                        </div>
+
+                    </form>
+
             </div>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Action</th>
-
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="group, igroup : ${groups}">
-                    <th scope="row" th:text="${igroup.index + 1}"></th>
-                    <td th:text="${group.name}"></td>
-                    <td>
-                        <a class="btn btn-primary" th:href="@{groups/{id}/update(id=${group.id})}">Update</a>
-                        <a class="btn btn-danger" >Delete</a>
-                        <a class="btn btn-success" >List student</a>
-                    </td>
-
-                </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </div>
