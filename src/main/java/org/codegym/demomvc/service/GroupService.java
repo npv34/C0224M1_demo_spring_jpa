@@ -30,9 +30,15 @@ public class GroupService {
         groupRepository.save(group);
     }
 
-    public void createGroup(String name) {
-        Group group = new Group();
-        group.setName(name);
+    public void createGroup(Group group) {
         groupRepository.save(group);
+    }
+
+    public void deleteGroup(Group group) {
+        groupRepository.delete(group);
+    }
+
+    public List<Group> findByName(String keyword) {
+        return groupRepository.findByNameContaining(keyword);
     }
 }
