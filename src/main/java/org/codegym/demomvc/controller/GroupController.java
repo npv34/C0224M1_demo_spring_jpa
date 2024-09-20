@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -79,5 +80,11 @@ public class GroupController {
         model.addAttribute("group", group);
         model.addAttribute("students", students);
         return "groups/students/list";
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public String handleEntityNotFound(EntityNotFoundException e, Model model) {
+        model.addAttribute("message", e.getMessage());
+        return "errors/404";
     }
 }
