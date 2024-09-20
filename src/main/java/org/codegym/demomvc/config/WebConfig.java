@@ -3,6 +3,7 @@ package org.codegym.demomvc.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -12,6 +13,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 @Configuration  // Đánh dấu đây là một lớp cấu hình cho Spring
 @EnableWebMvc  // Kích hoạt các tính năng của Spring MVC
+@EnableAspectJAutoProxy
 @ComponentScan(basePackages = "org.codegym.demomvc")  // Quét các package để tìm các component như @Controller, @Service, @Repository
 public class WebConfig implements WebMvcConfigurer {
 
