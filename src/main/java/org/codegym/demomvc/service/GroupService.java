@@ -5,6 +5,7 @@ import org.codegym.demomvc.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -22,7 +23,7 @@ public class GroupService {
     }
 
     public Group findById(long id) {
-        return groupRepository.findById(id).orElse(null);
+        return groupRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find"));
     }
 
     public void updateGroup(Group group, String name) {

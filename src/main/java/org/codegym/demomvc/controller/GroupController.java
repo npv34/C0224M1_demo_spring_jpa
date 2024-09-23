@@ -3,12 +3,15 @@ package org.codegym.demomvc.controller;
 import org.codegym.demomvc.model.Group;
 import org.codegym.demomvc.model.Student;
 import org.codegym.demomvc.service.GroupService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -24,26 +27,36 @@ public class GroupController {
     }
     @GetMapping("")
     public String groupList(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
-        List<Group> groups;
-        if (keyword != null) {
-            groups = groupService.findByName(keyword);
-            model.addAttribute("keyword", keyword);
-        } else {
-            groups = groupService.getAllGroups();
+        try {
+            List<Group> groups;
+            if (keyword != null) {
+                groups = groupService.findByName(keyword);
+                model.addAttribute("keyword", keyword);
+            } else {
+                groups = groupService.getAllGroups();
+            }
+            model.addAttribute("groups", groups);
+            return "groups/list";
+        }catch (Exception e) {
+            return "errors/500";
         }
-        model.addAttribute("groups", groups);
-        return "groups/list";
     }
 
     @GetMapping("/{id}/update")
     public String updateGroup(@PathVariable("id") int id, Model model) {
-        Group groupUpdate = groupService.findById(id);
-        model.addAttribute("group", groupUpdate);
-        return "groups/update";
+            Group groupUpdate = groupService.findById(id);
+            model.addAttribute("group", groupUpdate);
+            return "groups/update";
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public String handleEntityNotFoundException(EntityNotFoundException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "errors/404";
     }
 
     @PostMapping("/{id}/update")
-    public String updateGroup(@PathVariable("id") int id, @RequestParam String name) {
+    public String updateGroup(@PathVariable("id") int id, @RequestParam String name) throws Exception {
         Group groupUpdate = groupService.findById(id);
         groupService.updateGroup(groupUpdate, name);
         return "redirect:/groups";
@@ -66,14 +79,14 @@ public class GroupController {
     }
 
     @GetMapping("/{id}/delete")
-    public String deleteGroup(@PathVariable("id") int id) {
+    public String deleteGroup(@PathVariable("id") int id) throws Exception {
         Group groupDelete = groupService.findById(id);
         groupService.deleteGroup(groupDelete);
         return "redirect:/groups";
     }
 
     @GetMapping("/{id}/students")
-    public String showListStudentOfGroup(@PathVariable("id") int id, Model model) {
+    public String showListStudentOfGroup(@PathVariable("id") int id, Model model) throws Exception {
         Group group = groupService.findById(id);
         List<Student> students = group.getStudents();
         model.addAttribute("group", group);
