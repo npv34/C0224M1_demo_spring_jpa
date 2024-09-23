@@ -3,8 +3,6 @@ package org.codegym.demomvc.controller;
 import org.codegym.demomvc.model.Group;
 import org.codegym.demomvc.model.Student;
 import org.codegym.demomvc.service.GroupService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -19,14 +18,15 @@ import java.util.List;
 @RequestMapping("/groups")
 public class GroupController {
 
-    private GroupService groupService;
+    private final GroupService groupService;
 
     @Autowired
     public GroupController(GroupService groupService) {
         this.groupService = groupService;
     }
     @GetMapping("")
-    public String groupList(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
+    public String groupList(@RequestParam(value = "keyword", required = false)
+                                String keyword, Model model, HttpSession httpSession) {
         try {
             List<Group> groups;
             if (keyword != null) {
@@ -36,6 +36,8 @@ public class GroupController {
                 groups = groupService.getAllGroups();
             }
             model.addAttribute("groups", groups);
+            String userLogin = (String) httpSession.getAttribute("userLogin");
+            model.addAttribute("userLogin", userLogin);
             return "groups/list";
         }catch (Exception e) {
             return "errors/500";
