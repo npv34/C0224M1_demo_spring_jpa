@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -43,6 +44,11 @@ public class WebConfig implements WebMvcConfigurer {
         viewResolver.setTemplateEngine(templateEngine());  // Sử dụng template engine đã được cấu hình
         viewResolver.setCharacterEncoding("UTF-8");  // Đảm bảo view sử dụng đúng encoding UTF-8
         return viewResolver;
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();  // Tạo RestTemplate để gửi request đến API
     }
 
 }
