@@ -4,11 +4,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
-<h1>Weather</h1>
+<select id="city_name">
+    <option value="hanoi">Hanoi</option>
+    <option value="tokyo">Tokyo</option>
+    <option value="new york">New York</option>
+    <option value="london">London</option>
+    <option value="beijing">Beijing</option>
+    <option value="sydney">Sydney</option>
+    <option value="singapore">Singapore</option>
+    <option value="mumbai">Mumbai</option>
+    <option value="delhi">Delhi</option>
+    <option value="chennai">Chennai</option>
+    <option value="bangkok">Bangkok</option>
+    <option value="seoul">Seoul</option>
+    <option value="shanghai">Shanghai</option>
+    <option value="osaka">Osaka</option>
+</select>
+<h1 id="city"> </h1>
+<p id="temp"></p>
+<script>
+    $("#city_name").on("change", () => {
+        const city = $("#city_name").val();
+        getWeatherOfCity(city);
+    })
 
-<p th:text="'Temperature: ' + ${temp} + '°C'">Temperature: [temp]</p>
-<img th:src="${iconUrl}" alt="">
+    getWeatherOfCity("Hanoi")
+
+    function getWeatherOfCity(city) {
+        $.ajax({
+            url: "https://api.openweathermap.org/data/2.5/weather",
+            data: {
+                q: city,
+                appid: '02e3323f29bc461c2346db2fe3989729'
+            },
+            method: "GET",
+            dataType: "json",
+            success: (res) => {
+                const temp = Math.floor(res.main.temp) - 273;
+                const city = res.name;
+                // jquery thay doi giao dien
+                $("#temp").html("Temp: " + temp + " C")
+                $("#city").html("Weather: " + city )
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        })
+    }
+
+
+</script>
 </body>
 </html>

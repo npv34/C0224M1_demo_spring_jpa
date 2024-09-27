@@ -95,4 +95,11 @@ public class GroupController {
         model.addAttribute("students", students);
         return "groups/students/list";
     }
+
+    @GetMapping("/search")
+    @ResponseBody
+    public List<Group> searchByName(@RequestParam("name") String name) throws Exception {
+        List<Group> groups = groupService.findByName(name);
+        return groups;
+    }
 }

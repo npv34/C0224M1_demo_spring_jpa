@@ -16,21 +16,21 @@ public class WeatherController {
     @Autowired
     private ApiService apiService;
 
-    @GetMapping("/weather/{city}")
-    public String getWeather(@PathVariable String city, Model model) {
-        String url = "https://api.openweathermap.org/data/2.5/weather?q=Danang&appid=02e3323f29bc461c2346db2fe3989729";
-        String weather = apiService.getData(url);
-
-        // convert string to object
-        GsonBuilder builder = new GsonBuilder();
-        builder.setPrettyPrinting();
-        Gson gson = builder.create();
-        WeatherResponse weatherResponse = gson.fromJson(weather, WeatherResponse.class);
-
-        int temp = (int) (weatherResponse.getMain().getTemp() - 273);
-        model.addAttribute("temp", temp);
-        String icon = "https://openweathermap.org/img/wn/" + weatherResponse.getWeather().get(0).getIcon() + "@4x.png";
-        model.addAttribute("iconUrl", icon);
+    @GetMapping("/weather")
+    public String getWeather() {
+//        String url = "https://api.openweathermap.org/data/2.5/weather?q=Danang&appid=02e3323f29bc461c2346db2fe3989729";
+//        String weather = apiService.getData(url);
+//
+//        // convert string to object
+//        GsonBuilder builder = new GsonBuilder();
+//        builder.setPrettyPrinting();
+//        Gson gson = builder.create();
+//        WeatherResponse weatherResponse = gson.fromJson(weather, WeatherResponse.class);
+//
+//        int temp = (int) (weatherResponse.getMain().getTemp() - 273);
+//        model.addAttribute("temp", temp);
+//        String icon = "https://openweathermap.org/img/wn/" + weatherResponse.getWeather().get(0).getIcon() + "@4x.png";
+//        model.addAttribute("iconUrl", icon);
         return "weather";
     }
 }
