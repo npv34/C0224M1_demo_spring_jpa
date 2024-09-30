@@ -102,4 +102,13 @@ public class GroupController {
         List<Group> groups = groupService.findByName(name);
         return groups;
     }
+
+    @PostMapping("/update-name")
+    @ResponseBody
+    public Group updateGroup(@RequestParam("name") String name,
+                              @RequestParam("groupId") String id) throws Exception {
+        Group group = groupService.findById(Integer.parseInt(id));
+        groupService.updateGroup(group, name);
+        return group;
+    }
 }

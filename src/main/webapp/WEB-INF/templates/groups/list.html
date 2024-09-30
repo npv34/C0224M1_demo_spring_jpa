@@ -48,6 +48,8 @@
         <div class="col-12 col-md-6">
             <div>
                 <h2>Group list</h2>
+                <p th:text="#{greeting}"></p>
+
                 <div class="row">
                     <div class="col-12 col-md-4">
                         <a class="btn btn-success" href="/groups/create">New group</a>
@@ -56,7 +58,7 @@
                         <input class="form-control me-2" id="keyword-search" type="search" name="keyword" placeholder="Search" aria-label="Search">
                 </div>
             </div>
-            <table class="table table-striped">
+            <table class="table">
                 <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -67,7 +69,9 @@
                 <tbody id="list-group">
                 <tr th:each="group, igroup : ${groups}">
                     <th scope="row" th:text="${igroup.index + 1}"></th>
-                    <td th:text="${group.name}"></td>
+                    <td class="p-2" th:id="${'group-name-' + group.id}">
+                        <span th:data="${group.name}" th:data-id="${group.id}" class="name-container" th:text="${group.name}"></span>
+                    </td>
                     <td>
                         <a class="btn btn-primary" th:href="@{groups/{id}/update(id=${group.id})}">Update</a>
                         <a class="btn btn-danger" onclick="return confirm('Are you sure?')" th:href="@{groups/{id}/delete(id=${group.id})}">Delete</a>
@@ -88,6 +92,52 @@
         const name = $("#keyword-search").val();
         filterGroupByName(name);
     })
+
+    const data = {
+        name: ""
+    }
+
+    $(".name-container").on("click", function () {
+        console.log("click td")
+        const name = $(this).attr("data");
+        const id = $(this).attr("data-id");
+        const input = `<form class="form-change-name"><input class="input-name m-2" value='${name}' data-id="${id}" type="text"/></form>`;
+        $(this).replaceWith(input);
+    })
+
+    $("body").on("keyup", ".input-name", function () {
+        const name = $(this).val();
+        $(this).val(name)
+    })
+
+    $("body").on("submit", ".form-change-name", function (e) {
+        e.preventDefault(); // chan form submit len server
+        console.log("submit form")
+        const newName = $(this).find(".input-name").val();
+        const idGroup = $(this).find(".input-name").attr("data-id");
+        updateName(newName, idGroup);
+    })
+
+    function updateName(name, groupId) {
+        const origin = window.origin;
+        $.ajax({
+            url: origin + "/groups/update-name",
+            data: {
+                name: name,
+                groupId: groupId
+            },
+            method: "POST",
+            dataType: "json",
+            success: (res) => {
+                const html = `<span data="${res.name}" data-id="${res.id}" class="name-container">${res.name}</span>`
+               $(`#group-name-${res.id}`).html(html)
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        })
+    }
+
 
     function filterGroupByName(name) {
         const origin = window.origin;
