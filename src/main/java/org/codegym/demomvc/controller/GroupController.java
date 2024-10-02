@@ -25,9 +25,14 @@ public class GroupController {
         this.groupService = groupService;
     }
     @GetMapping("")
-    public String groupList(@RequestParam(value = "keyword", required = false)
-                                String keyword, Model model, HttpSession httpSession) {
+    public String groupList(@RequestParam(value = "keyword", required = false) String keyword,
+                            @RequestParam(value = "lang", required = false) String lang,
+                            Model model, HttpSession httpSession) {
         try {
+            if (lang == null) {
+                return "redirect:/groups?lang=vi";
+            }
+
             List<Group> groups;
             if (keyword != null) {
                 groups = groupService.findByName(keyword);
@@ -35,6 +40,11 @@ public class GroupController {
             } else {
                 groups = groupService.getAllGroups();
             }
+
+            System.out.println(lang);
+
+
+            model.addAttribute("currentLang", lang);
             model.addAttribute("groups", groups);
             String userLogin = (String) httpSession.getAttribute("userLogin");
             model.addAttribute("userLogin", userLogin);
@@ -61,7 +71,7 @@ public class GroupController {
     public String updateGroup(@PathVariable("id") int id, @RequestParam String name) throws Exception {
         Group groupUpdate = groupService.findById(id);
         groupService.updateGroup(groupUpdate, name);
-        return "redirect:/groups";
+        return "redirect:/groups?lang=vi";
     }
 
     @GetMapping("/create")
@@ -77,14 +87,14 @@ public class GroupController {
             return "groups/create";
         }
         groupService.createGroup(group);
-        return "redirect:/groups";
+        return "redirect:/groups?lang=vi";
     }
 
     @GetMapping("/{id}/delete")
     public String deleteGroup(@PathVariable("id") int id) throws Exception {
         Group groupDelete = groupService.findById(id);
         groupService.deleteGroup(groupDelete);
-        return "redirect:/groups";
+        return "redirect:/groups?lang=vi";
     }
 
     @GetMapping("/{id}/students")

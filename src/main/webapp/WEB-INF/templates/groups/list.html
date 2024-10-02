@@ -36,6 +36,15 @@
                     <li class="nav-item">
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Xin chao: <span th:text="${userLogin}"></span></a>
                     </li>
+                    <li class="nav-item">
+                        <form action="/groups" method="get">
+                            <select onchange="this.form.submit()" class="custom-select custom-select-lg mb-3" name="lang">
+                                <option th:selected="${currentLang.equals('vi')}" value="vi">VN</option>
+                                <option th:selected="${currentLang.equals('en')}" value="en">EN</option>
+                                <option th:selected="${currentLang.equals('fr')}" value="fr">FR</option>
+                            </select>
+                        </form>
+                    </li>
                 </ul>
                 <form class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -47,9 +56,7 @@
     <div class="row d-flex justify-content-center">
         <div class="col-12 col-md-6">
             <div>
-                <h2>Group list</h2>
-                <p th:text="#{greeting}"></p>
-
+                <h2 th:text="#{GROUP_LIST}">Group list</h2>
                 <div class="row">
                     <div class="col-12 col-md-4">
                         <a class="btn btn-success" href="/groups/create">New group</a>
@@ -73,8 +80,8 @@
                         <span th:data="${group.name}" th:data-id="${group.id}" class="name-container" th:text="${group.name}"></span>
                     </td>
                     <td>
-                        <a class="btn btn-primary" th:href="@{groups/{id}/update(id=${group.id})}">Update</a>
-                        <a class="btn btn-danger" onclick="return confirm('Are you sure?')" th:href="@{groups/{id}/delete(id=${group.id})}">Delete</a>
+                        <a class="btn btn-primary" th:href="@{groups/{id}/update(id=${group.id})}" th:text="#{UPDATE}"></a>
+                        <a class="btn btn-danger" onclick="return confirm('Are you sure?')" th:href="@{groups/{id}/delete(id=${group.id})}" th:text="#{DELETE}">Delete</a>
                         <a class="btn btn-success"  th:href="@{groups/{id}/students(id=${group.id})}">List student</a>
                     </td>
 
